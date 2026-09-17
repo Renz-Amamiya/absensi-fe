@@ -36,7 +36,7 @@ export default function LoginPage() {
             Jetson Attendance
           </CardTitle>
           <CardDescription className="text-slate-500">
-            Login to access your dashboard
+            Masuk untuk mengakses dashboard Anda
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -67,7 +67,7 @@ export default function LoginPage() {
               />
             </div>
             <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium h-11">
-              Sign In
+              Masuk
             </Button>
           </form>
 
@@ -77,7 +77,7 @@ export default function LoginPage() {
                 <span className="w-full border-t border-slate-200" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-slate-400">Or quick login as</span>
+                <span className="bg-white px-2 text-slate-400">Atau masuk cepat sebagai</span>
               </div>
             </div>
 
@@ -96,14 +96,14 @@ export default function LoginPage() {
                 className="border-slate-200 hover:bg-slate-50 hover:text-blue-700 text-slate-600"
               >
                 <UserIcon className="w-4 h-4 mr-2" />
-                User
+                Pengguna
               </Button>
             </div>
           </div>
         </CardContent>
         <CardFooter className="flex justify-center border-t border-slate-100 pt-6 pb-6">
           <p className="text-xs text-slate-400">
-            System powered by Jetson Nano AI
+            Sistem didukung oleh Jetson Nano AI
           </p>
         </CardFooter>
       </Card>

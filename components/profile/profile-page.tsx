@@ -16,8 +16,8 @@ export function ProfilePageContent() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-3xl font-bold text-slate-800">My Profile</h1>
-        <p className="text-slate-500 mt-1">Manage your personal information and settings.</p>
+        <h1 className="text-3xl font-bold text-slate-800">Profil Saya</h1>
+        <p className="text-slate-500 mt-1">Kelola informasi pribadi dan pengaturan Anda.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -34,32 +34,32 @@ export function ProfilePageContent() {
             </button>
           </div>
           <h3 className="text-xl font-bold text-slate-800">{user.name}</h3>
-          <p className="text-sm text-slate-500">{user.role === 'admin' ? 'Administrator' : 'Student'}</p>
+          <p className="text-sm text-slate-500">{user.role === 'admin' ? 'Administrator' : 'Siswa'}</p>
         </Card>
 
         <Card className="md:col-span-2 border-none shadow-sm">
           <CardHeader>
-            <CardTitle>Personal Information</CardTitle>
-            <CardDescription>Update your personal details here.</CardDescription>
+            <CardTitle>Informasi Pribadi</CardTitle>
+            <CardDescription>Perbarui detail pribadi Anda di sini.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
+              <Label htmlFor="fullName">Nama Lengkap</Label>
               <Input id="fullName" defaultValue={user.name} className="bg-slate-50 border-slate-200" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">Alamat Email</Label>
               <Input id="email" type="email" defaultValue={user.email} className="bg-slate-50 border-slate-200" readOnly />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="role">Role / Status</Label>
-              <Input id="role" defaultValue={user.role === 'admin' ? 'System Administrator' : 'Student (Registered)'} className="bg-slate-50 border-slate-200 text-slate-500" disabled />
+              <Label htmlFor="role">Peran / Status</Label>
+              <Input id="role" defaultValue={user.role === 'admin' ? 'Administrator Sistem' : 'Siswa (Terdaftar)'} className="bg-slate-50 border-slate-200 text-slate-500" disabled />
             </div>
             
             <div className="pt-4 flex justify-end">
               <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-md transition-all hover:shadow-lg">
                 <Save className="w-4 h-4 mr-2" />
-                Save Changes
+                Simpan Perubahan
               </Button>
             </div>
           </CardContent>

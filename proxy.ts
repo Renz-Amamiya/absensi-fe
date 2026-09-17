@@ -9,7 +9,6 @@ export function proxy(request: NextRequest) {
 
   if (role) {
     // If logged in and trying to access login page, redirect to dashboard
-    // This prevents going back to login page
     if (isLoginPage) {
       return NextResponse.redirect(new URL(`/${role}/dashboard`, request.url));
     }
@@ -24,25 +23,29 @@ export function proxy(request: NextRequest) {
   } else {
     // If not logged in and trying to access protected routes, redirect to login
     if (!isLoginPage) {
-      return NextResponse.redirect(new URL('/login', request.url));
+      const loginUrl = new URL('/login', request.url);
+      // Clear the cache when redirecting to login to be safe
+      const response = NextResponse.redirect(loginUrl);
+      response.headers.set('Cache-Control', 'no-store, max-age=0, must-revalidate');
+      return response;
     }
   }
   
-  return NextResponse.next();
+  const response = NextResponse.next();
+  
+  // Prevent browser caching for all protected pages
+  // This ensures that clicking the 'Back' button after logging out
+  // will force a server request and correctly redirect to login.
+  if (!isLoginPage) {
+    response.headers.set('Cache-Control', 'no-store, max-age=0, must-revalidate');
+  }
+  
+  return response;
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all protected routes and login routes:
-     * - /
-     * - /login
-     * - /admin/...
-     * - /user/...
-     */
-    '/',
-    '/login',
-    '/admin/:path*',
-    '/user/:path*'
+    // Catch all routes except Next.js internals and static assets
+    '/((?!_next|api|trpc|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
   ],
 }

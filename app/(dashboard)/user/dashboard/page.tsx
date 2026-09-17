@@ -10,86 +10,142 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CheckCircle2, ScanFace, Calendar, Clock } from "lucide-react";
+import { CheckCircle2, ScanFace, Calendar, Clock, Camera } from "lucide-react";
+import { CheckInModal } from "@/components/check-in-modal";
+import { useState } from "react";
 
-const personalLogs = [
-  { id: "1", date: "Sep 16, 2026", timestamp: "07:45:12 AM", status: "Present" },
-  { id: "2", date: "Sep 15, 2026", timestamp: "08:05:00 AM", status: "Late" },
-  { id: "3", date: "Sep 14, 2026", timestamp: "07:55:10 AM", status: "Present" },
-  { id: "4", date: "Sep 11, 2026", timestamp: "07:40:22 AM", status: "Present" },
+const initialPersonalLogs = [
+  { id: "1", date: new Date().toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' }), checkIn: "07:45:12 AM", checkOut: "-", status: "Hadir" },
+  { id: "2", date: "15 Sep 2026", checkIn: "08:05:00 AM", checkOut: "17:00:15 PM", status: "Terlambat" },
+  { id: "3", date: "14 Sep 2026", checkIn: "07:55:10 AM", checkOut: "17:15:20 PM", status: "Hadir" },
+  { id: "4", date: "11 Sep 2026", checkIn: "07:40:22 AM", checkOut: "16:55:40 PM", status: "Hadir" },
 ];
 
 export default function UserDashboard() {
+  const [logs, setLogs] = useState(initialPersonalLogs);
+  const [isCheckInModalOpen, setIsCheckInModalOpen] = useState(false);
+
+  const handleScan = (mode: "checkIn" | "checkOut", name: string) => {
+    const today = new Date().toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' });
+    const now = new Date().toLocaleTimeString('id-ID', { hour12: false });
+
+    setLogs(prev => {
+      const todayLogIndex = prev.findIndex(log => log.date === today);
+      
+      if (todayLogIndex >= 0) {
+        const newLogs = [...prev];
+        const log = { ...newLogs[todayLogIndex] };
+        
+        if (mode === "checkIn" && (!log.checkIn || log.checkIn === "-")) {
+          log.checkIn = now;
+        } else if (mode === "checkOut") {
+          log.checkOut = now;
+        }
+        
+        newLogs[todayLogIndex] = log;
+        return newLogs;
+      } else {
+        const newLog = {
+          id: Date.now().toString(),
+          date: today,
+          checkIn: mode === "checkIn" ? now : "-",
+          checkOut: mode === "checkOut" ? now : "-",
+          status: "Hadir"
+        };
+        return [newLog, ...prev];
+      }
+    });
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-3xl font-bold text-slate-800">My Dashboard</h1>
-        <p className="text-slate-500 mt-1">Welcome back, John Doe.</p>
+        <h1 className="text-3xl font-extrabold text-blue-900">Dashboard Saya</h1>
+        <p className="text-blue-600/80 mt-1 font-medium">Selamat datang kembali, John Doe.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="bg-white border-none shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Attendance Rate</CardTitle>
-            <Calendar className="w-5 h-5 text-blue-500" />
+        <Card className="bg-white border border-blue-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative rounded-2xl">
+          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-yellow-400/10 rounded-full blur-2xl group-hover:bg-yellow-400/20 transition-colors"></div>
+          <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
+            <CardTitle className="text-sm font-bold text-blue-800">Tingkat Kehadiran</CardTitle>
+            <div className="p-2.5 bg-blue-50 rounded-xl group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-sm border border-blue-100">
+              <Calendar className="w-5 h-5 text-blue-600" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold text-slate-800">92%</div>
-            <p className="text-xs text-slate-400 mt-1">This month</p>
+          <CardContent className="relative z-10">
+            <div className="text-4xl font-extrabold text-blue-900 tracking-tight">92%</div>
+            <p className="text-xs font-medium text-blue-500 mt-2">Bulan ini</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-white border-none shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Face Registration Status</CardTitle>
-            <ScanFace className="w-5 h-5 text-blue-500" />
+        <Card className="bg-white border border-blue-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative rounded-2xl">
+          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-colors"></div>
+          <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
+            <CardTitle className="text-sm font-bold text-blue-800">Status Registrasi Wajah</CardTitle>
+            <div className="p-2.5 bg-blue-50 rounded-xl group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300 shadow-sm border border-blue-100">
+              <ScanFace className="w-5 h-5 text-blue-600" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2 mt-1">
-              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 px-3 py-1">
-                <CheckCircle2 className="w-4 h-4 mr-2" /> Registered & Trained
+          <CardContent className="relative z-10">
+            <div className="flex items-center gap-2 mt-2">
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 px-3 py-1 font-semibold shadow-sm">
+                <CheckCircle2 className="w-4 h-4 mr-2" /> Terdaftar & Terlatih
               </Badge>
             </div>
-            <p className="text-xs text-slate-400 mt-2">Ready for Jetson Nano scanning.</p>
+            <p className="text-xs text-blue-500 mt-3 font-medium">Siap untuk pemindaian Jetson Nano.</p>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="bg-white border-none shadow-sm overflow-hidden">
-        <CardHeader className="border-b border-slate-100 pb-4">
-          <CardTitle className="text-lg text-slate-800 flex items-center gap-2">
-            <Clock className="w-5 h-5 text-slate-500" /> My Attendance History
-          </CardTitle>
-        </CardHeader>
-        <Table>
-          <TableHeader className="bg-slate-50">
-            <TableRow>
-              <TableHead className="font-semibold text-slate-700">Date</TableHead>
-              <TableHead className="font-semibold text-slate-700">Time</TableHead>
-              <TableHead className="font-semibold text-slate-700 text-right">Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {personalLogs.map((log) => (
-              <TableRow key={log.id} className="hover:bg-slate-50/50">
-                <TableCell className="font-medium text-slate-800">{log.date}</TableCell>
-                <TableCell className="text-slate-500">{log.timestamp}</TableCell>
-                <TableCell className="text-right">
-                  {log.status === "Late" ? (
-                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">
-                      {log.status}
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary" className="bg-green-100 text-green-800 hover:bg-green-200">
-                      {log.status}
-                    </Badge>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
+      <div className="mt-6">
+        <Card className="bg-white border border-blue-100 shadow-md overflow-hidden h-full rounded-2xl">
+          <CardHeader className="border-b border-blue-100/50 pb-4 bg-blue-50/30 flex flex-row items-center justify-between">
+            <CardTitle className="text-lg font-extrabold text-blue-900 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-yellow-500" /> Riwayat Kehadiran Saya
+            </CardTitle>
+            <button onClick={() => setIsCheckInModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
+              <Camera className="w-4 h-4" /> Absen Sekarang
+            </button>
+          </CardHeader>
+            <Table>
+              <TableHeader className="bg-blue-50/50">
+                <TableRow className="border-blue-100">
+                  <TableHead className="font-bold text-blue-900">Tanggal</TableHead>
+                  <TableHead className="font-bold text-blue-900">Masuk</TableHead>
+                  <TableHead className="font-bold text-blue-900">Keluar</TableHead>
+                  <TableHead className="font-bold text-blue-900 text-right">Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {logs.map((log) => (
+                  <TableRow key={log.id} className="hover:bg-blue-50/50 border-blue-100 transition-colors">
+                    <TableCell className="font-bold text-slate-700">{log.date}</TableCell>
+                    <TableCell className="text-blue-700 font-mono text-xs font-bold">{log.checkIn}</TableCell>
+                    <TableCell className="text-blue-700 font-mono text-xs font-bold">{log.checkOut || "-"}</TableCell>
+                    <TableCell className="text-right">
+                      {log.status === "Terlambat" ? (
+                        <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200 font-bold border border-yellow-200">
+                          {log.status}
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="bg-green-100 text-green-800 hover:bg-green-200 font-bold border border-green-200">
+                          {log.status}
+                        </Badge>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Card>
+      </div>
+
+      <CheckInModal 
+        isOpen={isCheckInModalOpen} 
+        onClose={() => setIsCheckInModalOpen(false)} 
+        onLog={handleScan} 
+      />
     </div>
   );
 }

@@ -13,79 +13,103 @@ import { Card } from "@/components/ui/card";
 import { Calendar as CalendarIcon, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { AttendanceEvidenceModal } from "@/components/attendance-evidence-modal";
+import { Eye } from "lucide-react";
 
 const extendedLogs = [
-  { id: "1", date: "Sep 16, 2026", timestamp: "07:45:12 AM", status: "Present", device: "Jetson Nano Gate A" },
-  { id: "2", date: "Sep 15, 2026", timestamp: "08:05:00 AM", status: "Late", device: "Jetson Nano Gate A" },
-  { id: "3", date: "Sep 14, 2026", timestamp: "07:55:10 AM", status: "Present", device: "Jetson Nano Gate B" },
-  { id: "4", date: "Sep 11, 2026", timestamp: "07:40:22 AM", status: "Present", device: "Jetson Nano Gate A" },
-  { id: "5", date: "Sep 10, 2026", timestamp: "-", status: "Absent", device: "-" },
-  { id: "6", date: "Sep 09, 2026", timestamp: "07:58:15 AM", status: "Present", device: "Jetson Nano Gate A" },
-  { id: "7", date: "Sep 08, 2026", timestamp: "08:12:44 AM", status: "Late", device: "Jetson Nano Gate B" },
-  { id: "8", date: "Sep 07, 2026", timestamp: "07:50:01 AM", status: "Present", device: "Jetson Nano Gate A" },
+  { id: "1", date: "16 Sep 2026", checkIn: "07:45:12 AM", checkOut: "17:05:30 PM", status: "Hadir", device: "Jetson Nano Gate A" },
+  { id: "2", date: "15 Sep 2026", checkIn: "08:05:00 AM", checkOut: "17:00:15 PM", status: "Terlambat", device: "Jetson Nano Gate A" },
+  { id: "3", date: "14 Sep 2026", checkIn: "07:55:10 AM", checkOut: "17:15:20 PM", status: "Hadir", device: "Jetson Nano Gate B" },
+  { id: "4", date: "11 Sep 2026", checkIn: "07:40:22 AM", checkOut: "16:55:40 PM", status: "Hadir", device: "Jetson Nano Gate A" },
+  { id: "5", date: "10 Sep 2026", checkIn: "-", checkOut: "-", status: "Alpa", device: "-" },
+  { id: "6", date: "09 Sep 2026", checkIn: "07:58:15 AM", checkOut: "17:10:00 PM", status: "Hadir", device: "Jetson Nano Gate A" },
+  { id: "7", date: "08 Sep 2026", checkIn: "08:12:44 AM", checkOut: "17:05:22 PM", status: "Terlambat", device: "Jetson Nano Gate B" },
+  { id: "8", date: "07 Sep 2026", checkIn: "07:50:01 AM", checkOut: "17:00:00 PM", status: "Hadir", device: "Jetson Nano Gate A" },
 ];
 
 export default function MyHistoryPage() {
+  const [selectedLog, setSelectedLog] = useState<any>(null);
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">My History</h1>
-          <p className="text-slate-500 mt-1">Detailed log of your attendance records.</p>
+          <h1 className="text-3xl font-extrabold text-blue-900">Riwayat Saya</h1>
+          <p className="text-blue-600/80 mt-1 font-medium">Log detail catatan kehadiran Anda.</p>
         </div>
         
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative flex-1 sm:w-64">
-            <CalendarIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
+            <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-blue-400" />
             <Input
               type="text"
-              placeholder="Search by date..."
-              className="pl-8 bg-white border-slate-200"
+              placeholder="Cari berdasarkan tanggal..."
+              className="pl-10 bg-white border-blue-200 focus-visible:ring-blue-500 rounded-xl"
             />
           </div>
-          <Button variant="outline" className="border-slate-200 text-slate-600 bg-white shadow-sm">
-            <Filter className="w-4 h-4 mr-2" />
+          <Button variant="outline" className="border-blue-200 text-blue-700 hover:bg-blue-50 bg-white shadow-sm font-bold rounded-xl gap-2">
+            <Filter className="w-4 h-4" />
             Filter
           </Button>
         </div>
       </div>
 
-      <Card className="bg-white border-none shadow-sm overflow-hidden">
+      <Card className="bg-white border border-blue-100 shadow-md overflow-hidden rounded-2xl">
         <Table>
-          <TableHeader className="bg-slate-50">
-            <TableRow>
-              <TableHead className="font-semibold text-slate-700">Date</TableHead>
-              <TableHead className="font-semibold text-slate-700">Scan Time</TableHead>
-              <TableHead className="font-semibold text-slate-700">Device Location</TableHead>
-              <TableHead className="font-semibold text-slate-700 text-right">Status</TableHead>
+          <TableHeader className="bg-blue-50/50">
+            <TableRow className="border-blue-100">
+              <TableHead className="font-bold text-blue-900">Tanggal</TableHead>
+              <TableHead className="font-bold text-blue-900">Masuk</TableHead>
+              <TableHead className="font-bold text-blue-900">Keluar</TableHead>
+              <TableHead className="font-bold text-blue-900">Lokasi Perangkat</TableHead>
+              <TableHead className="font-bold text-blue-900">Status</TableHead>
+              <TableHead className="font-bold text-blue-900 text-right">Bukti</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {extendedLogs.map((log) => (
-              <TableRow key={log.id} className="hover:bg-slate-50/50">
-                <TableCell className="font-medium text-slate-800">{log.date}</TableCell>
-                <TableCell className="text-slate-500">{log.timestamp}</TableCell>
-                <TableCell className="text-slate-500 text-sm">{log.device}</TableCell>
-                <TableCell className="text-right">
-                  {log.status === "Late" ? (
-                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">
+              <TableRow key={log.id} className="hover:bg-blue-50/50 border-blue-100 transition-colors">
+                <TableCell className="font-bold text-slate-700">{log.date}</TableCell>
+                <TableCell className="text-blue-700 font-mono text-xs font-bold">{log.checkIn}</TableCell>
+                <TableCell className="text-blue-700 font-mono text-xs font-bold">{log.checkOut}</TableCell>
+                <TableCell className="text-slate-500 font-medium">{log.device}</TableCell>
+                <TableCell>
+                  {log.status === "Terlambat" ? (
+                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200 font-bold border border-yellow-200">
                       {log.status}
                     </Badge>
-                  ) : log.status === "Absent" ? (
-                    <Badge variant="secondary" className="bg-red-100 text-red-800 hover:bg-red-200">
+                  ) : log.status === "Alpa" ? (
+                    <Badge variant="secondary" className="bg-red-100 text-red-800 hover:bg-red-200 font-bold border border-red-200">
                       {log.status}
                     </Badge>
                   ) : (
-                    <Badge variant="secondary" className="bg-green-100 text-green-800 hover:bg-green-200">
+                    <Badge variant="secondary" className="bg-green-100 text-green-800 hover:bg-green-200 font-bold border border-green-200">
                       {log.status}
                     </Badge>
                   )}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setSelectedLog(log)}
+                    className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                  >
+                    <Eye className="w-4 h-4 mr-2" /> Lihat
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </Card>
+
+      <AttendanceEvidenceModal 
+        isOpen={!!selectedLog} 
+        onClose={() => setSelectedLog(null)} 
+        log={selectedLog} 
+      />
     </div>
   );
 }

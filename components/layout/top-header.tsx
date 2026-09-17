@@ -13,39 +13,42 @@ export function TopHeader({ onMenuClick }: TopHeaderProps = {}) {
   const { user } = useAuth();
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-10">
+    <header className="h-16 mx-4 mt-4 mb-2 rounded-2xl bg-white/90 backdrop-blur-xl border border-blue-100 shadow-[0_4px_24px_-8px_rgba(37,99,235,0.15)] flex items-center justify-between px-6 sticky top-4 z-10 transition-all duration-300">
       <div className="flex items-center">
-        <h2 className="text-xl font-semibold text-slate-800 tracking-tight">
-          {user?.role === "admin" ? "Admin Portal" : "User Portal"}
+        <h2 className="text-xl font-extrabold text-blue-900 tracking-tight">
+          {user?.role === "admin" ? "Portal Admin" : "Portal Pengguna"}
         </h2>
       </div>
 
       <div className="flex items-center gap-2 md:gap-6">
-        <button className="relative p-2 text-slate-500 hover:text-blue-600 transition-colors rounded-full hover:bg-slate-100">
+        <button className="relative p-2.5 text-blue-600 hover:text-blue-800 transition-all duration-300 rounded-xl hover:bg-blue-50 shadow-sm hover:shadow-md">
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-2 w-2 h-2 bg-yellow-400 rounded-full border border-white"></span>
+          <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-yellow-400 rounded-full border-2 border-white shadow-sm animate-pulse"></span>
         </button>
 
-        <Link href={`/${user?.role || 'user'}/profile`} className="hidden md:flex items-center gap-3 border-l border-slate-200 pl-6 cursor-pointer hover:opacity-80 transition-opacity">
+        <Link href={`/${user?.role || 'user'}/profile`} className="hidden md:flex items-center gap-4 pl-6 cursor-pointer group">
           <div className="text-right hidden md:block">
-            <p className="text-sm font-medium text-slate-700 leading-none">
+            <p className="text-sm font-bold text-blue-900 leading-none group-hover:text-blue-700 transition-colors">
               {user?.name}
             </p>
-            <p className="text-xs text-slate-500 mt-1">
-              {user?.email}
+            <p className="text-xs text-slate-500 mt-1 font-medium">
+              {user?.role === 'admin' ? 'Administrator' : 'Siswa'}
             </p>
           </div>
-          <Avatar className="h-9 w-9 border border-slate-200">
-            <AvatarImage src="" alt="@avatar" />
-            <AvatarFallback className="bg-blue-100 text-blue-700 font-bold">
-              {user?.name?.substring(0, 2).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative">
+            <div className="absolute inset-0 bg-yellow-400 rounded-full blur opacity-40 group-hover:opacity-70 transition-opacity"></div>
+            <Avatar className="relative h-10 w-10 border-2 border-yellow-400 shadow-sm transition-transform duration-300 group-hover:scale-105">
+              <AvatarImage src="" alt="@avatar" />
+              <AvatarFallback className="bg-gradient-to-br from-blue-700 to-blue-800 text-white font-bold">
+                {user?.name?.substring(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </div>
         </Link>
         
         <button 
           onClick={onMenuClick}
-          className="md:hidden p-2 text-slate-500 hover:text-blue-600 transition-colors rounded-lg hover:bg-slate-100"
+          className="md:hidden p-2 text-blue-600 hover:text-blue-800 transition-colors rounded-lg hover:bg-blue-50"
         >
           <Menu className="w-6 h-6" />
         </button>
