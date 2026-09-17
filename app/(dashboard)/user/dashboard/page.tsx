@@ -64,7 +64,7 @@ export default function UserDashboard() {
         <p className="text-blue-600/80 mt-1 font-medium">Selamat datang kembali, John Doe.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="bg-white border border-blue-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative rounded-2xl">
           <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-yellow-400/10 rounded-full blur-2xl group-hover:bg-yellow-400/20 transition-colors"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
@@ -80,20 +80,46 @@ export default function UserDashboard() {
         </Card>
 
         <Card className="bg-white border border-blue-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative rounded-2xl">
-          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-colors"></div>
+          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-green-400/10 rounded-full blur-2xl group-hover:bg-green-400/20 transition-colors"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
-            <CardTitle className="text-sm font-bold text-blue-800">Status Registrasi Wajah</CardTitle>
-            <div className="p-2.5 bg-blue-50 rounded-xl group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300 shadow-sm border border-blue-100">
-              <ScanFace className="w-5 h-5 text-blue-600" />
+            <CardTitle className="text-sm font-bold text-blue-800">Jadwal Hari Ini</CardTitle>
+            <div className="p-2.5 bg-blue-50 rounded-xl group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-sm border border-blue-100">
+              <Clock className="w-5 h-5 text-blue-600" />
             </div>
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="flex items-center gap-2 mt-2">
-              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 px-3 py-1 font-semibold shadow-sm">
-                <CheckCircle2 className="w-4 h-4 mr-2" /> Terdaftar & Terlatih
+            <div className="text-lg font-extrabold text-blue-900 tracking-tight">
+              {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </div>
+            <div className="flex items-center gap-4 mt-2">
+              <div className="text-xs font-medium text-slate-500">Masuk: <span className="font-bold text-blue-700">07:00</span></div>
+              <div className="text-xs font-medium text-slate-500">Pulang: <span className="font-bold text-blue-700">15:00</span></div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white border border-blue-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative rounded-2xl">
+          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-colors"></div>
+          <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
+            <CardTitle className="text-sm font-bold text-blue-800">Absensi Hari Ini</CardTitle>
+            <div className="p-2.5 bg-blue-50 rounded-xl group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300 shadow-sm border border-blue-100">
+              <Camera className="w-5 h-5 text-blue-600" />
+            </div>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <div className="flex items-center gap-2 mt-1">
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 px-2 py-0.5 font-bold shadow-sm text-[10px]">
+                <CheckCircle2 className="w-3 h-3 mr-1" /> Wajah Terverifikasi
               </Badge>
             </div>
-            <p className="text-xs text-blue-500 mt-3 font-medium">Siap untuk pemindaian Jetson Nano.</p>
+            <div className="mt-4">
+              <button 
+                onClick={() => setIsCheckInModalOpen(true)} 
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
+              >
+                <Camera className="w-5 h-5" /> Absen Sekarang
+              </button>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -104,9 +130,6 @@ export default function UserDashboard() {
             <CardTitle className="text-lg font-extrabold text-blue-900 flex items-center gap-2">
               <Clock className="w-5 h-5 text-yellow-500" /> Riwayat Kehadiran Saya
             </CardTitle>
-            <button onClick={() => setIsCheckInModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
-              <Camera className="w-4 h-4" /> Absen Sekarang
-            </button>
           </CardHeader>
             <Table>
               <TableHeader className="bg-blue-50/50">
