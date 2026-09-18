@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma"
+import prisma from "@/lib/prisma"
 import { FaceVerificationTable } from "./components/face-verification-table"
 import { Card } from "@/components/ui/card"
 
@@ -8,27 +8,16 @@ export const metadata = {
 }
 
 export default async function FaceVerificationPage() {
-  // Ambil data request verifikasi wajah dari database
-  // Karena prisma sedang dalam update, kita siapkan struktur pemanggilannya
-  // await prisma.faceRegistration.findMany(...)
-  
-  // Untuk saat ini kita gunakan data dummy agar UI terlihat
-  const dummyRequests = [
-    {
-      id: "req-1",
-      user: { nama: "Budi Santoso", email: "budi@example.com" },
-      photo_url: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-      status: "pending",
-      created_at: new Date(),
+  // Ambil antrean verifikasi wajah yang berstatus "pending"
+  const requests = await prisma.faceRegistration.findMany({
+    where: { status: "pending" },
+    include: {
+      user: true
     },
-    {
-      id: "req-2",
-      user: { nama: "Siti Aminah", email: "siti@example.com" },
-      photo_url: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-      status: "pending",
-      created_at: new Date(),
+    orderBy: {
+      created_at: 'desc'
     }
-  ];
+  });
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -42,7 +31,7 @@ export default async function FaceVerificationPage() {
       </div>
       
       <Card className="bg-white border-none shadow-sm overflow-hidden">
-        <FaceVerificationTable requests={dummyRequests} />
+        <FaceVerificationTable requests={requests} />
       </Card>
     </div>
   )

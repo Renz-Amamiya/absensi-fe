@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
@@ -34,6 +34,26 @@ async def recognize_face(file: UploadFile = File(...)):
         "user_id": "1",
         "name": "Budi (Simulasi)",
         "confidence": 0.95
+    }
+
+@app.post("/api/train-face")
+async def train_face(file: UploadFile = File(...), user_id: str = Form(...)):
+    # Saat ini hanya simulasi, model AI aslinya belum dipasang
+    image_bytes = await file.read()
+    
+    # --- Di sini nanti kode untuk ekstrak vektor wajah (embedding) ---
+    # misal: embedding = my_face_model.extract_embedding(image_bytes)
+    # -----------------------------------------------------------------
+
+    print(f"Menerima gambar untuk training: {file.filename} (user: {user_id}), ukuran {len(image_bytes)} bytes")
+    
+    # Kembalikan vektor dummy (128 dimensi)
+    dummy_embedding = [0.1] * 128
+    
+    return {
+        "status": "success",
+        "user_id": user_id,
+        "embedding": dummy_embedding
     }
 
 if __name__ == "__main__":

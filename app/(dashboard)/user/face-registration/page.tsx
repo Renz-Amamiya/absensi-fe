@@ -27,12 +27,26 @@ export default function FaceRegistrationPage() {
 
     setIsSubmitting(true)
     
-    // Simulasi upload ke server
-    setTimeout(() => {
+    try {
+      const formData = new FormData()
+      formData.append('photo', file)
+
+      const response = await fetch('/api/face-registration', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (response.ok) {
+        setIsSuccess(true)
+      } else {
+        alert("Gagal mendaftarkan wajah. Silakan coba lagi.")
+      }
+    } catch (error) {
+      console.error("Error submitting face:", error)
+      alert("Terjadi kesalahan sistem.")
+    } finally {
       setIsSubmitting(false)
-      setIsSuccess(true)
-      // fetch('/api/face-registration', { method: 'POST', body: formData })
-    }, 1500)
+    }
   }
 
   if (isSuccess) {

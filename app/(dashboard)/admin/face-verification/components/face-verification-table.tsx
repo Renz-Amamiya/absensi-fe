@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Check, X, Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -15,11 +16,29 @@ import {
 
 export function FaceVerificationTable({ requests }: { requests: any[] }) {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null)
+  const router = useRouter()
 
   const handleProcess = async (id: string, action: "approve" | "reject") => {
-    // Di sini nanti panggil API untuk memproses foto ke Python backend
-    // fetch(`/api/face-verification/${id}`, { method: 'POST', body: JSON.stringify({ action }) })
-    alert(`Mensimulasikan ${action} untuk ID: ${id}. \n(Nanti akan connect ke API Python)`)
+    try {
+      // Tombol disable sementara logic bisa ditambahkan nanti
+      const res = await fetch(`/api/face-verification/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action })
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        alert(`Gagal memproses: ${data.error || 'Server error'}`)
+        return
+      }
+
+      alert(action === 'approve' ? 'Data wajah berhasil diproses!' : 'Pengajuan ditolak.')
+      router.refresh()
+    } catch (error) {
+      console.error(error)
+      alert("Terjadi kesalahan jaringan.")
+    }
   }
 
   return (
