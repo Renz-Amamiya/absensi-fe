@@ -3,19 +3,21 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/components/auth/auth-provider";
-import { LayoutDashboard, Users, FileText, CalendarCheck, ShieldCheck, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, FileText, CalendarCheck, ShieldCheck, LogOut, Camera } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 const adminLinks = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Data Master", href: "/admin/master-data", icon: Users },
+  { name: "Verifikasi Wajah", href: "/admin/face-verification", icon: Camera },
   { name: "Log Global", href: "/admin/logs", icon: FileText },
 ];
 
 const userLinks = [
   { name: "Dashboard", href: "/user/dashboard", icon: LayoutDashboard },
   { name: "Riwayat Saya", href: "/user/history", icon: CalendarCheck },
+  { name: "Daftar Wajah", href: "/user/face-registration", icon: Camera },
 ];
 
 interface SidebarProps {

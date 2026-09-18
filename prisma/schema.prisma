@@ -16,6 +16,7 @@ model User {
   face_embed String?  @db.Text         // Untuk menyimpan data vektor wajah
   create_at  DateTime @default(now())
   absensi    Absen[]
+  face_reqs  FaceRegistration[]
 
   @@map("user")
 }
@@ -31,4 +32,17 @@ model Absen {
   user             User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("absen")
+}
+
+model FaceRegistration {
+  id         String   @id @default(uuid())
+  user_id    String
+  photo_url  String
+  status     String   @default("pending") // "pending", "approved", "rejected"
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("face_registration")
 }

@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/table";
 import { CheckCircle2, ScanFace, Calendar, Clock, Camera } from "lucide-react";
 import { CheckInModal } from "@/components/check-in-modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { X } from "lucide-react";
 
 const initialPersonalLogs = [
   { id: "1", date: new Date().toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' }), checkIn: "07:45:12 AM", checkOut: "-", status: "Hadir" },
@@ -24,6 +25,7 @@ const initialPersonalLogs = [
 export default function UserDashboard() {
   const [logs, setLogs] = useState(initialPersonalLogs);
   const [isCheckInModalOpen, setIsCheckInModalOpen] = useState(false);
+  const [notification, setNotification] = useState<{show: boolean, message: string, type: 'success' | 'info'}>({ show: false, message: '', type: 'success' });
 
   const handleScan = (mode: "checkIn" | "checkOut", name: string) => {
     const today = new Date().toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -55,6 +57,16 @@ export default function UserDashboard() {
         return [newLog, ...prev];
       }
     });
+
+    setNotification({
+      show: true,
+      message: `Wajah terverifikasi! Anda berhasil absen ${mode === 'checkIn' ? 'masuk' : 'keluar'} pada ${now}.`,
+      type: 'success'
+    });
+
+    setTimeout(() => {
+      setNotification(prev => ({ ...prev, show: false }));
+    }, 4000);
   };
 
   return (
@@ -169,6 +181,27 @@ export default function UserDashboard() {
         onClose={() => setIsCheckInModalOpen(false)} 
         onLog={handleScan} 
       />
+      {/* Toast Notification */}
+      <div 
+        className={`fixed bottom-6 right-6 z-50 transition-all duration-500 transform ${notification.show ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}
+      >
+        <div className="bg-white border-l-4 border-green-500 shadow-xl rounded-lg p-4 flex items-start gap-4 max-w-sm">
+          <div className="bg-green-100 p-2 rounded-full">
+            <CheckCircle2 className="w-5 h-5 text-green-600" />
+          </div>
+          <div className="flex-1">
+            <h4 className="text-sm font-bold text-slate-800">Berhasil</h4>
+            <p className="text-sm text-slate-600 mt-1">{notification.message}</p>
+          </div>
+          <button 
+            onClick={() => setNotification(prev => ({ ...prev, show: false }))}
+            className="text-slate-400 hover:text-slate-600 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
     </div>
   );
 }

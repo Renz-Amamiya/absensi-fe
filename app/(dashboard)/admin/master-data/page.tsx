@@ -20,40 +20,33 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, BrainCircuit, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const initialUsers = [
-  { id: "1", name: "John Doe", role: "Student", faceTrained: true },
-  { id: "2", name: "Jane Smith", role: "Student", faceTrained: true },
-  { id: "3", name: "Alice Johnson", role: "Student", faceTrained: false },
-  { id: "4", name: "Bob Williams", role: "Student", faceTrained: false },
-  { id: "5", name: "Charlie Brown", role: "Student", faceTrained: true },
+  { id: "1", name: "Budi Santoso", email: "budi@example.com", role: "Admin", status: "Aktif" },
+  { id: "2", name: "Siti Aminah", email: "siti@example.com", role: "User", status: "Aktif" },
+  { id: "3", name: "Andi Darmawan", email: "andi@example.com", role: "User", status: "Nonaktif" },
+  { id: "4", name: "Rina Sari", email: "rina@example.com", role: "User", status: "Aktif" },
 ];
 
 export default function MasterData() {
   const [users, setUsers] = useState(initialUsers);
-  const [isTraining, setIsTraining] = useState<string | null>(null);
 
-  const handleTrainModel = (userId: string) => {
-    setIsTraining(userId);
-    // Simulate sending data to Jetson Nano
-    setTimeout(() => {
-      setUsers(users.map(u => u.id === userId ? { ...u, faceTrained: true } : u));
-      setIsTraining(null);
-    }, 2000);
+  const handleDelete = (userId: string) => {
+    setUsers(users.filter(u => u.id !== userId));
   };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">Master Data</h1>
-          <p className="text-slate-500 mt-1">Manage users and face recognition models.</p>
+          <h1 className="text-3xl font-bold text-blue-900">Master Data</h1>
+          <p className="text-blue-800/60 mt-1">Manage users and face recognition models.</p>
         </div>
         
         <Dialog>
-          <DialogTrigger render={<Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2 shadow-md" />}>
+          <DialogTrigger render={<Button className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold gap-2 shadow-[0_0_15px_rgba(250,204,21,0.3)]" />}>
             <Plus className="w-4 h-4" /> Add New User
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
@@ -79,43 +72,71 @@ export default function MasterData() {
 
       <Card className="bg-white border-none shadow-sm overflow-hidden">
         <Table>
-          <TableHeader className="bg-slate-50">
+          <TableHeader className="bg-blue-50/50 border-b border-blue-100">
             <TableRow>
-              <TableHead className="font-semibold text-slate-700">Name</TableHead>
-              <TableHead className="font-semibold text-slate-700">Role</TableHead>
-              <TableHead className="font-semibold text-slate-700 text-center">Face Trained</TableHead>
-              <TableHead className="font-semibold text-slate-700 text-right">Actions</TableHead>
+              <TableHead className="font-semibold text-blue-900">Name</TableHead>
+              <TableHead className="font-semibold text-blue-900">Role</TableHead>
+              <TableHead className="font-semibold text-blue-900">Email</TableHead>
+              <TableHead className="font-semibold text-blue-900 text-center">Status</TableHead>
+              <TableHead className="font-semibold text-blue-900 text-right">Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users.map((user) => (
-              <TableRow key={user.id} className="hover:bg-slate-50/50">
-                <TableCell className="font-medium text-slate-800">{user.name}</TableCell>
-                <TableCell className="text-slate-500">{user.role}</TableCell>
-                <TableCell className="text-center">
-                  {user.faceTrained ? (
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
-                      <CheckCircle2 className="w-3 h-3" /> Yes
-                    </Badge>
-                  ) : (
-                    <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 gap-1">
-                      <XCircle className="w-3 h-3" /> No
-                    </Badge>
-                  )}
+              <TableRow key={user.id} className="hover:bg-blue-50/30">
+                <TableCell className="font-medium text-blue-900">{user.name}</TableCell>
+                <TableCell className="text-blue-800/70">
+                  <Badge variant="outline" className={user.role === "Admin" ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-slate-50 text-slate-700 border-slate-200"}>
+                    {user.role}
+                  </Badge>
                 </TableCell>
-                <TableCell className="text-right">
+                <TableCell className="text-blue-800/70">{user.email}</TableCell>
+                <TableCell className="text-center">
+                  <Badge variant="outline" className={user.status === "Aktif" ? "bg-blue-600 text-white border-blue-700" : "bg-white text-blue-400 border-blue-200"}>
+                    {user.status}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-right space-x-2">
+                  <Dialog>
+                    <DialogTrigger render={<Button size="sm" variant="outline" className="text-blue-600 border-blue-200 hover:bg-blue-50" />}>
+                      <Pencil className="w-4 h-4 mr-1" /> Edit
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>Edit Pengguna</DialogTitle>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4 text-left">
+                        <div className="grid gap-2">
+                          <Label>Nama Lengkap</Label>
+                          <Input defaultValue={user.name} />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label>Email</Label>
+                          <Input defaultValue={user.email} />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label>Role</Label>
+                          <Input defaultValue={user.role} />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label>Status</Label>
+                          <Input defaultValue={user.status} />
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-2 mt-2">
+                        <Button type="button" className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => alert(`Simulasi: Data ${user.name} berhasil disimpan!`)}>
+                          Simpan Perubahan
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                   <Button
                     size="sm"
-                    disabled={user.faceTrained || isTraining === user.id}
-                    onClick={() => handleTrainModel(user.id)}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 shadow-sm disabled:opacity-50"
+                    variant="outline"
+                    onClick={() => handleDelete(user.id)}
+                    className="text-yellow-600 border-yellow-300 hover:bg-yellow-50"
                   >
-                    {isTraining === user.id ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <BrainCircuit className="w-4 h-4 mr-2" />
-                    )}
-                    {isTraining === user.id ? "Training to Jetson..." : "Train Face Model"}
+                    <Trash2 className="w-4 h-4 mr-1" /> Hapus
                   </Button>
                 </TableCell>
               </TableRow>
